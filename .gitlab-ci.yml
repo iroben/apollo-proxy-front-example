@@ -1,8 +1,12 @@
+variables:
+  APOLLO_FAT: "http://admin:123456@10.11.101.196:9999/fat"
+  APOLLO_PROD: "http://admin:123456@10.11.101.196:9999/prod"
+
 test build:
   image: node:14.15.3
   stage: build
   script:
-    - export APOLLO=http://admin:123456@10.11.101.196:9999/fat
+    - export APOLLO=$APOLLO_FAT
     - npm ci --registry=https://registry.npm.taobao.org
     - npm run build
     - cat apollo-config.js
@@ -13,7 +17,7 @@ prod build:
   image: node:14.15.3
   stage: build
   script:
-    - export APOLLO=http://admin:123456@10.11.101.196:9999/prod
+    - export APOLLO=$APOLLO_PROD
     - npm ci --registry=https://registry.npm.taobao.org
     - npm run build
     - cat apollo-config.js
