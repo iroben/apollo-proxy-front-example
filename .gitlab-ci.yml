@@ -1,0 +1,43 @@
+test build:
+  image: node:14.15.3
+  stage: build
+  script:
+    - export APOLLO=http://admin:123456@10.11.101.196:9999/fat
+    - npm ci --registry=https://registry.npm.taobao.org
+    - npm run build
+    - cat apollo-config.js
+  only: 
+    - test
+
+prod build:
+  image: node:14.15.3
+  stage: build
+  script:
+    - export APOLLO=http://admin:123456@10.11.101.196:9999/prod
+    - npm ci --registry=https://registry.npm.taobao.org
+    - npm run build
+    - cat apollo-config.js
+  only: 
+    - master
+
+test apollo proxy trigger:
+  stage: deploy
+  image: node:14.15.3
+  script:
+    - echo 'trigger from apollo'
+  only:
+    refs:
+      - test
+    variables:
+      - $TRIGGER == 'apollo-proxy'
+
+prod apollo proxy trigger:
+  stage: deploy
+  image: node:14.15.3
+  script:
+    - echo 'trigger from apollo'
+  only:
+    refs:
+      - master
+    variables:
+      - $TRIGGER == 'apollo-proxy'
